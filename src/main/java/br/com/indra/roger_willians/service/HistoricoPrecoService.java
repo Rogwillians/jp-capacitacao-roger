@@ -1,16 +1,16 @@
 package br.com.indra.roger_willians.service;
 
 import br.com.indra.roger_willians.model.HistoricoPreco;
-import br.com.indra.roger_willians.model.Produtos;
+import br.com.indra.roger_willians.model.Produto;
 import br.com.indra.roger_willians.repository.HistoricoPrecoRepository;
 import br.com.indra.roger_willians.service.dto.HistoricoPrecoDTO;
+import br.com.indra.roger_willians.service.dto.HistoricoPrecoResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -18,30 +18,51 @@ import java.util.UUID;
 public class HistoricoPrecoService {
     private final HistoricoPrecoRepository historicoPrecoRepository;
 
-    public void registrarHistorico(Produtos produto, BigDecimal precoOld, BigDecimal precoNew) {
+    public void registrarHistorico(Produto produto, BigDecimal precoAntigo, BigDecimal precoNovo) {
 
-        HistoricoPreco historico = new HistoricoPreco();
-        historico.setProdutos(produto);
-        historico.setPrecoAntigo(precoOld);
-        historico.setPrecoNovo(precoNew);
-        historico.setDataAlteracao(LocalDateTime.now());
+        HistoricoPrecoDTO dto = new HistoricoPrecoDTO(
+                null,
+                produto.getId(),
+                precoAntigo,
+                precoNovo,
+                LocalDateTime.now()
+        );
 
+
+        HistoricoPreco historico = converterParaEntidade(dto, produto);
 
         historicoPrecoRepository.save(historico);
     }
 
-    public HistoricoPrecoDTO getHistoricoPrecoByProdutoId(UUID produtoId){
-        Set<HistoricoPreco> historicoPreco = historicoPrecoRepository.findByProdutosId(produtoId)
-                .stream().flatMap().toList();
+    public List<HistoricoPrecoResponseDTO> buscarHistoricoPorProduto(UUID produtoId) {
+
+        List<HistoricoPreco> historicos = historicoPrecoRepository.findByProdutoIdOrderByDataAlteracaoDesc(produtoId);
 
         return historicos.stream()
-                .map(historico -> new HistoricoPrecoDTO(
-                        historico.getId(),
-                        historico.getProduto().getId(),
-                        historico.getPrecoAntigo(),
-                        historico.getPrecoNovo(),
-                        historico.getDataAlteracao()
-                ))
+                .map(this::converterParaDTO)
                 .toList();
+    }
+
+
+    private HistoricoPrecoResponseDTO converterParaDTO(HistoricoPreco historico) {
+        return new HistoricoPrecoResponseDTO(
+                historico.getId(),
+                historico.getPrecoAntigo(),
+                historico.getPrecoNovo(),
+                historico.getDataAlteracao()
+        );
+    }
+
+    private HistoricoPreco converterParaEntidade(HistoricoPrecoDTO dto, Produto produtoExistente) {
+
+
+        HistoricoPreco historicoPreco = new HistoricoPreco();
+
+        historicoPreco.setProduto(produtoExistente);
+        historicoPreco.setPrecoAntigo(dto.precoAntigo());
+        historicoPreco.setPrecoNovo(dto.precoNovo());
+        historicoPreco.setDataAlteracao(dto.dataAlteracao());
+
+        return historicoPreco;
     }
 }

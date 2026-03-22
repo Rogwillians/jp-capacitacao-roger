@@ -24,7 +24,7 @@ public class HistoricoPreco {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "produto_id")
-    private Produtos produtos;
+    private Produto produto;
 
     @Column(name = "preco_antigo")
     private BigDecimal precoAntigo;

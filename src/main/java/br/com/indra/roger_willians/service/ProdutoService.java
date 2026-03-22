@@ -1,0 +1,179 @@
+package br.com.indra.roger_willians.service;
+
+import br.com.indra.roger_willians.exception.RecursoNaoEncontradoException;
+import br.com.indra.roger_willians.model.Produto;
+import br.com.indra.roger_willians.repository.ProdutoRepository;
+import br.com.indra.roger_willians.service.dto.ProdutoDTO;
+import br.com.indra.roger_willians.service.dto.ProdutoResponseDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class ProdutoService {
+
+    private final ProdutoRepository produtoRepository;
+    private final HistoricoPrecoService historicoPrecoService;
+
+    public List<ProdutoResponseDTO> findAll(){
+
+        List<Produto> produtos = produtoRepository.findAll();
+
+        return produtos.stream()
+                .map(this::converterParaDTO
+                )
+                .toList();
+    }
+
+    public ProdutoResponseDTO findById(UUID id){
+        final var produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado com o ID: " + id));
+
+        return converterParaDTO(produto);
+    }
+
+    public List<Produto> buscarPoucoEstoque(Integer quantidadeMinima) {
+
+        if (quantidadeMinima != null && quantidadeMinima < 0) {
+            throw new IllegalArgumentException("A quantidade mínima não pode ser menor que zero.");
+        }
+
+        if (quantidadeMinima == null) {
+            throw new IllegalArgumentException("O parâmetro 'quantidade' é obrigatório.");
+        }
+
+        return produtoRepository.buscarPoucoEstoque(quantidadeMinima);
+    }
+
+    public List<ProdutoResponseDTO> buscarPorFaixaDePreco(BigDecimal precoMin, BigDecimal precoMax) {
+
+        if (precoMin.compareTo(precoMax) > 0) {
+            throw new IllegalArgumentException("O preço mínimo não pode ser maior que o preço máximo.");
+        }
+
+        List<Produto> produtos = produtoRepository.buscarPorFaixaDePreco(precoMin, precoMax);
+
+
+        return produtos.stream()
+                .map(this::converterParaDTO)
+                .toList();
+    }
+
+    @Transactional
+    public ProdutoResponseDTO cadastrarProduto(ProdutoDTO dto) {
+
+        if (produtoRepository.findBySku(dto.sku()).isPresent()) {
+            throw new IllegalArgumentException("Já existe um produto cadastrado com o SKU: " + dto.sku());
+        }
+
+        Produto produtoNovo = converterParaEntidade(dto);
+
+        Produto produtoSalvo = produtoRepository.save(produtoNovo);
+
+        return converterParaDTO(produtoSalvo);
+    }
+
+    @Transactional
+    public ProdutoResponseDTO atualizarProduto(UUID id, ProdutoDTO dto) {
+        final var produtoAtual = produtoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+
+        if (!produtoAtual.getSku().equals(dto.sku()) &&
+                produtoRepository.findBySku(dto.sku()).isPresent()) {
+            throw new IllegalArgumentException("Já existe outro produto cadastrado com o SKU: " + dto.sku());
+        }
+
+        atualizarDadosEntidade(produtoAtual, dto);
+
+        Produto produtoAtualizado = produtoRepository.save(produtoAtual);
+
+        return converterParaDTO(produtoAtualizado);
+    }
+
+
+    @Transactional
+    public Produto atualizarPreco(UUID id, BigDecimal precoNovo) {
+        final var produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado"));
+        Produto produtoAtualizado;
+
+        BigDecimal precoAntigo = produto.getPreco();
+
+        produto.setPreco(precoNovo);
+
+        if (precoAntigo.compareTo(precoNovo) != 0) {
+
+
+            produto.setPreco(precoNovo);
+            produtoAtualizado = produtoRepository.save(produto);
+
+
+            historicoPrecoService.registrarHistorico(produtoAtualizado, precoAntigo, precoNovo);
+        } else{
+            throw new IllegalArgumentException("O preço novo é igual ao preço atual.");
+        }
+
+
+        return produtoAtualizado;
+
+    }
+
+
+    @Transactional
+    public void deletarProduto(UUID id) {
+        final var produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto com o ID: " + id + " não encontrado"));
+
+        produtoRepository.delete(produto);
+    }
+
+    @Transactional
+    public void inativarProduto(UUID id) {
+
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto com o ID: " + id + " não encontrado"));
+
+        produto.setAtivo(false);
+
+        produtoRepository.save(produto);
+    }
+
+    private ProdutoResponseDTO converterParaDTO(Produto produto) {
+        return new ProdutoResponseDTO(
+                produto.getId(),
+                produto.getNome(),
+                produto.getDescricao(),
+                produto.getSku(),
+                produto.getPreco(),
+                produto.getQuantidadeEstoque()
+        );
+    }
+
+
+    private Produto converterParaEntidade(ProdutoDTO dto) {
+        Produto produto = new Produto();
+        produto.setNome(dto.nome());
+        produto.setDescricao(dto.descricao());
+        produto.setSku(dto.sku());
+        produto.setPreco(dto.preco());
+        produto.setPrecoCusto(dto.precoCusto());
+        produto.setCategoriaId(dto.categoriaId());
+        produto.setQuantidadeEstoque(dto.quantidadeEstoque());
+        return produto;
+    }
+
+    private void atualizarDadosEntidade(Produto produtoExistente, ProdutoDTO dto) {
+        produtoExistente.setNome(dto.nome());
+        produtoExistente.setDescricao(dto.descricao());
+        produtoExistente.setSku(dto.sku());
+        produtoExistente.setPreco(dto.preco());
+        produtoExistente.setPrecoCusto(dto.precoCusto());
+        produtoExistente.setCategoriaId(dto.categoriaId());
+        produtoExistente.setQuantidadeEstoque(dto.quantidadeEstoque());
+    }
+}
