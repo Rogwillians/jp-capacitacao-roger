@@ -23,7 +23,7 @@ public class HistoricoPreco {
     private UUID id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "produto_id")
+    @JoinColumn(name = "produto_id", columnDefinition = "VARCHAR2(36)")
     private Produto produto;
 
     @Column(name = "preco_antigo")

@@ -1,6 +1,7 @@
 package br.com.indra.roger_willians.service;
 
 import br.com.indra.roger_willians.exception.RecursoNaoEncontradoException;
+import br.com.indra.roger_willians.model.Categoria;
 import br.com.indra.roger_willians.model.Produto;
 import br.com.indra.roger_willians.repository.ProdutoRepository;
 import br.com.indra.roger_willians.service.dto.ProdutoDTO;
@@ -19,6 +20,7 @@ public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
     private final HistoricoPrecoService historicoPrecoService;
+    private final CategoriaService categoriaService;
 
     public List<ProdutoResponseDTO> findAll(){
 
@@ -37,7 +39,7 @@ public class ProdutoService {
         return converterParaDTO(produto);
     }
 
-    public List<Produto> buscarPoucoEstoque(Integer quantidadeMinima) {
+    public List<ProdutoResponseDTO> buscarPoucoEstoque(Integer quantidadeMinima) {
 
         if (quantidadeMinima != null && quantidadeMinima < 0) {
             throw new IllegalArgumentException("A quantidade mínima não pode ser menor que zero.");
@@ -46,8 +48,11 @@ public class ProdutoService {
         if (quantidadeMinima == null) {
             throw new IllegalArgumentException("O parâmetro 'quantidade' é obrigatório.");
         }
+        List<Produto> produto = produtoRepository.findByQuantidadeEstoqueLessThanEqual(quantidadeMinima);
 
-        return produtoRepository.buscarPoucoEstoque(quantidadeMinima);
+        return produto.stream()
+                .map(this::converterParaDTO)
+                .toList();
     }
 
     public List<ProdutoResponseDTO> buscarPorFaixaDePreco(BigDecimal precoMin, BigDecimal precoMax) {
@@ -56,7 +61,7 @@ public class ProdutoService {
             throw new IllegalArgumentException("O preço mínimo não pode ser maior que o preço máximo.");
         }
 
-        List<Produto> produtos = produtoRepository.buscarPorFaixaDePreco(precoMin, precoMax);
+        List<Produto> produtos = produtoRepository.findByPrecoBetween(precoMin, precoMax);
 
 
         return produtos.stream()
@@ -71,7 +76,9 @@ public class ProdutoService {
             throw new IllegalArgumentException("Já existe um produto cadastrado com o SKU: " + dto.sku());
         }
 
-        Produto produtoNovo = converterParaEntidade(dto);
+        Categoria categoria = categoriaService.buscarEntidadePorId(dto.categoriaId());
+
+        Produto produtoNovo = converterParaEntidade(dto, categoria);
 
         Produto produtoSalvo = produtoRepository.save(produtoNovo);
 
@@ -88,7 +95,9 @@ public class ProdutoService {
             throw new IllegalArgumentException("Já existe outro produto cadastrado com o SKU: " + dto.sku());
         }
 
-        atualizarDadosEntidade(produtoAtual, dto);
+        Categoria categoria = categoriaService.buscarEntidadePorId(dto.categoriaId());
+
+        atualizarDadosEntidade(produtoAtual, dto, categoria);
 
         Produto produtoAtualizado = produtoRepository.save(produtoAtual);
 
@@ -155,25 +164,28 @@ public class ProdutoService {
     }
 
 
-    private Produto converterParaEntidade(ProdutoDTO dto) {
+    private Produto converterParaEntidade(ProdutoDTO dto, Categoria categoria) {
         Produto produto = new Produto();
         produto.setNome(dto.nome());
         produto.setDescricao(dto.descricao());
         produto.setSku(dto.sku());
         produto.setPreco(dto.preco());
         produto.setPrecoCusto(dto.precoCusto());
-        produto.setCategoriaId(dto.categoriaId());
         produto.setQuantidadeEstoque(dto.quantidadeEstoque());
+
+        produto.setCategoria(categoria);
+
         return produto;
     }
 
-    private void atualizarDadosEntidade(Produto produtoExistente, ProdutoDTO dto) {
+    private void atualizarDadosEntidade(Produto produtoExistente, ProdutoDTO dto, Categoria categoria) {
         produtoExistente.setNome(dto.nome());
         produtoExistente.setDescricao(dto.descricao());
         produtoExistente.setSku(dto.sku());
         produtoExistente.setPreco(dto.preco());
         produtoExistente.setPrecoCusto(dto.precoCusto());
-        produtoExistente.setCategoriaId(dto.categoriaId());
         produtoExistente.setQuantidadeEstoque(dto.quantidadeEstoque());
+
+        produtoExistente.setCategoria(categoria);
     }
 }

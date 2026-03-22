@@ -2,8 +2,6 @@ package br.com.indra.roger_willians.repository;
 
 import br.com.indra.roger_willians.model.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -17,10 +15,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, UUID> {
     List<Produto> findByAtivoTrue();
     List<Produto> findByCategoriaId(UUID categoriaId);
     List<Produto> findByNomeContainingIgnoreCase(String nome);
+    List<Produto> findByQuantidadeEstoqueLessThanEqual(Integer quantidade);
+    List<Produto> findByPrecoBetween(BigDecimal precoMin, BigDecimal precoMax);
 
-
-    @Query("SELECT p FROM Produto p WHERE p.quantidadeEstoque <= :estoqueMin AND p.ativo = true")
-    List<Produto> buscarPoucoEstoque(@Param("estoqueMin") Integer quantidade);
-    @Query("SELECT p FROM Produto p WHERE p.preco BETWEEN :precoMin AND :precoMax")
-    List<Produto> buscarPorFaixaDePreco(@Param("precoMin") BigDecimal precoMin, @Param("precoMax") BigDecimal precoMax);
 }

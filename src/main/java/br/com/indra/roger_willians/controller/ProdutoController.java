@@ -36,10 +36,10 @@ public class ProdutoController {
     }
 
     @GetMapping("/pouco-estoque")
-    public ResponseEntity<List<Produto>> listarPoucoEstoque(
+    public ResponseEntity<List<ProdutoResponseDTO>> listarPoucoEstoque(
             @RequestParam(value = "quantidade", defaultValue = "10") Integer quantidade) {
 
-        List<Produto> produtosComEstoqueBaixo = produtoService.buscarPoucoEstoque(quantidade);
+        List<ProdutoResponseDTO> produtosComEstoqueBaixo = produtoService.buscarPoucoEstoque(quantidade);
 
         if (produtosComEstoqueBaixo.isEmpty()) {
             return ResponseEntity.noContent().build();

@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,10 +20,11 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Produto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @UuidGenerator
     @Column(columnDefinition = "VARCHAR2(36)")
     private UUID id;
 
@@ -40,8 +43,9 @@ public class Produto {
     @Column(name = "preco_custo", precision = 10, scale = 2)
     private BigDecimal precoCusto;
 
-    @Column(name = "categoria_id")
-    private UUID categoriaId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id", nullable = false, columnDefinition = "VARCHAR2(36)")
+    private Categoria categoria;
 
     @Column(name = "quantidade_estoque", nullable = false)
     private Integer quantidadeEstoque;
