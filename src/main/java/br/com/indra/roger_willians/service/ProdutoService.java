@@ -39,6 +39,54 @@ public class ProdutoService {
         return converterParaDTO(produto);
     }
 
+    public List<ProdutoResponseDTO> buscarPorCategoria(UUID categoriaId) {
+        List<Produto> produto = produtoRepository.findByCategoriaId(categoriaId);
+
+        if (produto.isEmpty()) {
+            throw new RecursoNaoEncontradoException("Nenhum produto encontrado para a categoria com ID: " + categoriaId);
+        }
+
+        return produto.stream()
+                .map(this::converterParaDTO)
+                .toList();
+    }
+
+    public List<ProdutoResponseDTO> buscarAtivo() {
+        List<Produto> produto = produtoRepository.findByAtivoTrue();
+
+        if (produto.isEmpty()) {
+            throw new RecursoNaoEncontradoException("Nenhum produto ativo encontrado.");
+        }
+
+        return produto.stream()
+                .map(this::converterParaDTO)
+                .toList();
+    }
+
+    public List<ProdutoResponseDTO> buscarInativo() {
+        List<Produto> produto = produtoRepository.findByAtivoFalse();
+
+        if (produto.isEmpty()) {
+            throw new RecursoNaoEncontradoException("Nenhum produto ativo encontrado.");
+        }
+
+        return produto.stream()
+                .map(this::converterParaDTO)
+                .toList();
+    }
+
+    public List<ProdutoResponseDTO> buscarPorNomeContendo(String nome) {
+        List<Produto> produto = produtoRepository.findByNomeContainingIgnoreCase(nome);
+
+        if (produto.isEmpty()) {
+            throw new RecursoNaoEncontradoException("Nenhum produto encontrado com o nome: " + nome);
+        }
+
+        return produto.stream()
+                .map(this::converterParaDTO)
+                .toList();
+    }
+
     public List<ProdutoResponseDTO> buscarPoucoEstoque(Integer quantidadeMinima) {
 
         if (quantidadeMinima != null && quantidadeMinima < 0) {
@@ -130,6 +178,21 @@ public class ProdutoService {
 
         return produtoAtualizado;
 
+    }
+
+    @Transactional
+    public void reativarProduto(UUID id) {
+
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto com o ID: " + id + " não encontrado"));
+
+        if(produto.getAtivo()) {
+            throw new IllegalArgumentException("O produto já está ativo.");
+        }
+
+        produto.setAtivo(true);
+
+        produtoRepository.save(produto);
     }
 
 

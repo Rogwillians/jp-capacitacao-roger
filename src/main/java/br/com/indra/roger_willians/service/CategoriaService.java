@@ -47,6 +47,36 @@ public class CategoriaService {
                 .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada com o ID: " + id));
     }
 
+    @Transactional
+    public CategoriaResponseDTO atualizarCategoria(UUID id, CategoriaDTO dto) {
+        Categoria categoriaExistente = categoriaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada com o ID: " + id));
+
+        if (!categoriaExistente.getNome().equals(dto.nome()) && categoriaRepository.existsByNome(dto.nome())) {
+            throw new IllegalArgumentException("Já existe uma categoria com o nome: " + dto.nome());
+        }
+
+        categoriaExistente.setNome(dto.nome());
+
+        if (dto.categoriaPaiId() != null) {
+            Categoria pai = categoriaRepository.findById(dto.categoriaPaiId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categoria Pai não encontrada."));
+            categoriaExistente.setCategoriaPai(pai);
+        } else {
+            categoriaExistente.setCategoriaPai(null);
+        }
+
+        return converterParaDTO(categoriaExistente);
+    }
+
+    @Transactional
+    public void deletarCategoria(UUID id) {
+        Categoria categoriaExistente = categoriaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada com o ID: " + id));
+
+        categoriaRepository.delete(categoriaExistente);
+    }
+
 
     private Categoria converterParaEntidade(CategoriaDTO dto) {
         Categoria categoria = new Categoria();

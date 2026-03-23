@@ -35,6 +35,50 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.findById(id));
     }
 
+    @GetMapping("/categoria/{categoriaId}")
+    public ResponseEntity<List<ProdutoResponseDTO>> buscarPorCategoria(@PathVariable UUID categoriaId) {
+        List<ProdutoResponseDTO> produtos = produtoService.buscarPorCategoria(categoriaId);
+
+        if(produtos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/ativos")
+    public ResponseEntity<List<ProdutoResponseDTO>> buscarAtivo() {
+        List<ProdutoResponseDTO> produtosAtivos = produtoService.buscarAtivo();
+
+        if (produtosAtivos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(produtosAtivos);
+    }
+
+    @GetMapping("/inativos")
+    public ResponseEntity<List<ProdutoResponseDTO>> buscarInativo() {
+        List<ProdutoResponseDTO> produtosInativos = produtoService.buscarInativo();
+
+        if (produtosInativos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(produtosInativos);
+    }
+
+    @GetMapping("/por-nome")
+    public ResponseEntity<List<ProdutoResponseDTO>> buscarPorNomeContendo(@RequestParam String nome) {
+        List<ProdutoResponseDTO> produtos = produtoService.buscarPorNomeContendo(nome);
+
+        if (produtos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(produtos);
+    }
+
     @GetMapping("/pouco-estoque")
     public ResponseEntity<List<ProdutoResponseDTO>> listarPoucoEstoque(
             @RequestParam(value = "quantidade", defaultValue = "10") Integer quantidade) {
@@ -101,6 +145,12 @@ public class ProdutoController {
     @DeleteMapping("/inativar/{id}")
     public ResponseEntity<Void> inativarProduto(@PathVariable UUID id) {
         produtoService.inativarProduto(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/reativar/{id}")
+    public ResponseEntity<Void> reativarProduto(@PathVariable UUID id) {
+        produtoService.reativarProduto(id);
         return ResponseEntity.noContent().build();
     }
 

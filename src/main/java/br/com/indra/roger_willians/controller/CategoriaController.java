@@ -37,4 +37,18 @@ public class CategoriaController {
     public ResponseEntity<CategoriaResponseDTO> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(categoriaService.findById(id));
     }
+
+    @PutMapping("atualizar/{id}")
+    public ResponseEntity<CategoriaResponseDTO> atualizarCategoria(@PathVariable UUID id, @Valid @RequestBody CategoriaDTO dto) {
+
+        CategoriaResponseDTO categoriaAtualizada = categoriaService.atualizarCategoria(id, dto);
+
+        return ResponseEntity.ok(categoriaAtualizada);
+    }
+
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<Void> deletarCategoria(@PathVariable UUID id) {
+        categoriaService.deletarCategoria(id);
+        return ResponseEntity.noContent().build();
+    }
 }

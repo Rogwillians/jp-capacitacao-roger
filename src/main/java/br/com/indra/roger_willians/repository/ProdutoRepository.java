@@ -13,6 +13,7 @@ import java.util.UUID;
 public interface ProdutoRepository extends JpaRepository<Produto, UUID> {
     Optional<Produto> findBySku(String sku);
     List<Produto> findByAtivoTrue();
+    List<Produto> findByAtivoFalse();
     List<Produto> findByCategoriaId(UUID categoriaId);
     List<Produto> findByNomeContainingIgnoreCase(String nome);
     List<Produto> findByQuantidadeEstoqueLessThanEqual(Integer quantidade);
