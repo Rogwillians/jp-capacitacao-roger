@@ -34,7 +34,7 @@ public class ProdutoService {
 
     public ProdutoResponseDTO findById(UUID id){
         final var produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado com o ID: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado"));
 
         return converterParaDTO(produto);
     }
@@ -184,7 +184,7 @@ public class ProdutoService {
     public void reativarProduto(UUID id) {
 
         Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto com o ID: " + id + " não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado"));
 
         if(produto.getAtivo()) {
             throw new IllegalArgumentException("O produto já está ativo.");
@@ -199,7 +199,7 @@ public class ProdutoService {
     @Transactional
     public void deletarProduto(UUID id) {
         final var produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto com o ID: " + id + " não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado"));
 
         produtoRepository.delete(produto);
     }
@@ -208,10 +208,19 @@ public class ProdutoService {
     public void inativarProduto(UUID id) {
 
         Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto com o ID: " + id + " não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado"));
 
         produto.setAtivo(false);
 
+        produtoRepository.save(produto);
+    }
+
+    public Produto buscarEntidadePorId(UUID id) {
+        return produtoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado"));
+    }
+
+    public void atualizarEntidade(Produto produto) {
         produtoRepository.save(produto);
     }
 
@@ -225,7 +234,6 @@ public class ProdutoService {
                 produto.getQuantidadeEstoque()
         );
     }
-
 
     private Produto converterParaEntidade(ProdutoDTO dto, Categoria categoria) {
         Produto produto = new Produto();
