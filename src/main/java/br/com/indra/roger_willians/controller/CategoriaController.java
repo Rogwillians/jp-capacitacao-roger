@@ -5,7 +5,6 @@ import br.com.indra.roger_willians.service.dto.CategoriaResponseDTO;
 import br.com.indra.roger_willians.service.CategoriaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,33 +21,35 @@ public class CategoriaController {
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<CategoriaResponseDTO> cadastrarCategoria(@Valid @RequestBody CategoriaDTO dto) {
-        CategoriaResponseDTO categoriaSalva = categoriaService.cadastrarCategoria(dto);
+    @ResponseStatus(HttpStatus.CREATED)
+    public CategoriaResponseDTO cadastrarCategoria(@Valid @RequestBody CategoriaDTO dto) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
+        return categoriaService.cadastrarCategoria(dto);
     }
 
     @GetMapping("/listar")
-    public ResponseEntity<List<CategoriaResponseDTO>> findAll() {
-        return ResponseEntity.ok(categoriaService.findAll());
+    @ResponseStatus(HttpStatus.OK)
+    public List<CategoriaResponseDTO> findAll() {
+        return categoriaService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoriaResponseDTO> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(categoriaService.findById(id));
+    @ResponseStatus(HttpStatus.OK)
+    public CategoriaResponseDTO findById(@PathVariable UUID id) {
+        return categoriaService.findById(id);
     }
 
     @PutMapping("atualizar/{id}")
-    public ResponseEntity<CategoriaResponseDTO> atualizarCategoria(@PathVariable UUID id, @Valid @RequestBody CategoriaDTO dto) {
+    @ResponseStatus(HttpStatus.OK)
+    public CategoriaResponseDTO atualizarCategoria(@PathVariable UUID id,
+                                                                   @Valid @RequestBody CategoriaDTO dto) {
 
-        CategoriaResponseDTO categoriaAtualizada = categoriaService.atualizarCategoria(id, dto);
-
-        return ResponseEntity.ok(categoriaAtualizada);
+        return categoriaService.atualizarCategoria(id, dto);
     }
 
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Void> deletarCategoria(@PathVariable UUID id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletarCategoria(@PathVariable UUID id) {
         categoriaService.deletarCategoria(id);
-        return ResponseEntity.noContent().build();
     }
 }

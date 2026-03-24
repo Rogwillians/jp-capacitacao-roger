@@ -1,14 +1,12 @@
 package br.com.indra.roger_willians.controller;
 
-
-import br.com.indra.roger_willians.model.Carrinho;
 import br.com.indra.roger_willians.service.CarrinhoService;
 import br.com.indra.roger_willians.service.dto.AtualizarQuantidadeDTO;
 import br.com.indra.roger_willians.service.dto.CarrinhoResponseDTO;
 import br.com.indra.roger_willians.service.dto.ItemCarrinhoDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -22,43 +20,39 @@ public class CarrinhoController {
 
 
     @GetMapping
-    public ResponseEntity<CarrinhoResponseDTO> visualizarCarrinho(
+    @ResponseStatus(HttpStatus.OK)
+    public CarrinhoResponseDTO visualizarCarrinho(
             @RequestHeader("X-Usuario-Id") UUID usuarioId) {
 
-        Carrinho carrinho = carrinhoService.obterOuCriarCarrinhoAtivo(usuarioId);
-
-        CarrinhoResponseDTO response = carrinhoService.converterParaDTO(carrinho);
-
-        return ResponseEntity.ok(response);
+        return carrinhoService.converterParaDTO(
+                carrinhoService.obterOuCriarCarrinhoAtivo(usuarioId));
     }
 
 
     @PostMapping("/itens")
-    public ResponseEntity<CarrinhoResponseDTO> adicionarItem(
+    @ResponseStatus(HttpStatus.OK)
+    public CarrinhoResponseDTO adicionarItem(
             @RequestHeader("X-Usuario-Id") UUID usuarioId,
             @Valid @RequestBody ItemCarrinhoDTO dto) {
 
-        CarrinhoResponseDTO carrinhoAtualizado = carrinhoService.adicionarItem(usuarioId, dto);
-
-        return ResponseEntity.ok(carrinhoAtualizado);
+        return carrinhoService.adicionarItem(usuarioId, dto);
     }
 
     @PutMapping("/itens/{itemId}")
-    public ResponseEntity<CarrinhoResponseDTO> atualizarQuantidadeItem(
+    public CarrinhoResponseDTO atualizarQuantidadeItem(
             @RequestHeader("X-Usuario-Id") UUID usuarioId,
             @PathVariable UUID itemId,
             @Valid @RequestBody AtualizarQuantidadeDTO dto) {
 
-        CarrinhoResponseDTO carrinhoAtualizado = carrinhoService.atualizarQuantidadeItem(usuarioId, itemId, dto.quantidade());
-        return ResponseEntity.ok(carrinhoAtualizado);
+        return carrinhoService.atualizarQuantidadeItem(usuarioId, itemId, dto.quantidade());
     }
 
     @DeleteMapping("/itens/{itemId}")
-    public ResponseEntity<CarrinhoResponseDTO> removerItem(
+    @ResponseStatus(HttpStatus.OK)
+    public CarrinhoResponseDTO removerItem(
             @RequestHeader("X-Usuario-Id") UUID usuarioId,
             @PathVariable UUID itemId) {
 
-        CarrinhoResponseDTO carrinhoAtualizado = carrinhoService.removerItem(usuarioId, itemId);
-        return ResponseEntity.ok(carrinhoAtualizado);
+        return carrinhoService.removerItem(usuarioId, itemId);
     }
 }

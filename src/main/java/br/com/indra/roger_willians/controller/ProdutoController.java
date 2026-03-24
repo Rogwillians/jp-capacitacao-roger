@@ -1,6 +1,5 @@
 package br.com.indra.roger_willians.controller;
 
-import br.com.indra.roger_willians.model.Produto;
 import br.com.indra.roger_willians.service.ProdutoService;
 import br.com.indra.roger_willians.service.dto.AtualizarPrecoDTO;
 import br.com.indra.roger_willians.service.dto.ProdutoDTO;
@@ -24,15 +23,17 @@ public class ProdutoController {
 
 
     @GetMapping
-    public ResponseEntity<List<ProdutoResponseDTO>> getAll(){
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProdutoResponseDTO> getAll(){
 
-        return ResponseEntity.ok(produtoService.findAll());
+        return produtoService.findAll();
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDTO> getById(@PathVariable UUID id){
-        return ResponseEntity.ok(produtoService.findById(id));
+    @ResponseStatus(HttpStatus.OK)
+    public ProdutoResponseDTO getById(@PathVariable UUID id){
+        return produtoService.findById(id);
     }
 
     @GetMapping("/categoria/{categoriaId}")
@@ -93,65 +94,56 @@ public class ProdutoController {
     }
 
     @GetMapping("/faixa-preco")
-    public ResponseEntity<List<ProdutoResponseDTO>> buscarPorFaixaDePreco(
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProdutoResponseDTO> buscarPorFaixaDePreco(
             @RequestParam(name = "min") BigDecimal precoMin,
             @RequestParam(name = "max") BigDecimal precoMax) {
 
-        List<ProdutoResponseDTO> listaProdutos = produtoService.buscarPorFaixaDePreco(precoMin, precoMax);
-
-
-        return ResponseEntity.ok(listaProdutos);
+        return produtoService.buscarPorFaixaDePreco(precoMin, precoMax);
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<ProdutoResponseDTO> cadastrarProduto(@Valid @RequestBody ProdutoDTO dto){
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProdutoResponseDTO cadastrarProduto(@Valid @RequestBody ProdutoDTO dto){
 
-        ProdutoResponseDTO produtoSalvo = produtoService.cadastrarProduto(dto);
-
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(produtoSalvo);
+        return produtoService.cadastrarProduto(dto);
     }
 
     @PutMapping("/atualizar/{id}")
-    public ResponseEntity<ProdutoResponseDTO> atualizarProduto(
+    @ResponseStatus(HttpStatus.OK)
+    public ProdutoResponseDTO atualizarProduto(
             @PathVariable UUID id,
             @Valid @RequestBody ProdutoDTO dto) {
 
-
-        ProdutoResponseDTO produtoAtualizado = produtoService.atualizarProduto(id, dto);
-
-        return ResponseEntity.ok(produtoAtualizado);
+        return produtoService.atualizarProduto(id, dto);
     }
 
     @PatchMapping("/atualiza-preco/{id}")
-    public ResponseEntity<Produto> atualizarPreco(
+    @ResponseStatus(HttpStatus.OK)
+    public ProdutoResponseDTO atualizarPreco(
             @PathVariable UUID id,
             @Valid @RequestBody AtualizarPrecoDTO dto) {
 
-
-        Produto produtoAtualizado = produtoService.atualizarPreco(id, dto.preco());
-
-        return ResponseEntity.ok(produtoAtualizado);
+        return produtoService.atualizarPreco(id, dto.preco());
     }
 
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Void> deletarProduto(@PathVariable UUID id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletarProduto(@PathVariable UUID id) {
 
         produtoService.deletarProduto(id);
-
-        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/inativar/{id}")
-    public ResponseEntity<Void> inativarProduto(@PathVariable UUID id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativarProduto(@PathVariable UUID id) {
         produtoService.inativarProduto(id);
-        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/reativar/{id}")
-    public ResponseEntity<Void> reativarProduto(@PathVariable UUID id) {
+    @ResponseStatus(HttpStatus.OK)
+    public void reativarProduto(@PathVariable UUID id) {
         produtoService.reativarProduto(id);
-        return ResponseEntity.noContent().build();
     }
 
 

@@ -26,8 +26,7 @@ public class EstoqueController {
             @PathVariable UUID produtoId,
             @Valid @RequestBody TransacaoEstoqueDTO dto) {
 
-        TransacaoEstoqueResponseDTO transacao = estoqueService.adicionarEstoque(produtoId, dto);
-        return ResponseEntity.ok(transacao);
+        return ResponseEntity.ok(estoqueService.adicionarEstoque(produtoId, dto));
     }
 
     @PostMapping("/remover/{produtoId}")
@@ -35,8 +34,7 @@ public class EstoqueController {
             @PathVariable UUID produtoId,
             @Valid @RequestBody TransacaoEstoqueDTO dto) {
 
-        TransacaoEstoqueResponseDTO transacao = estoqueService.removerEstoque(produtoId, dto);
-        return ResponseEntity.ok(transacao);
+        return ResponseEntity.ok(estoqueService.removerEstoque(produtoId, dto));
     }
 
     @GetMapping("/{produtoId}")

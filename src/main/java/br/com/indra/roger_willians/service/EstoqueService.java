@@ -58,7 +58,6 @@ public class EstoqueService {
         return registrarTransacao(produto, -dto.quantidade(), TipoTransacao.SAIDA, dto);
     }
 
-
     private TransacaoEstoqueResponseDTO registrarTransacao(Produto produto, Integer delta, TipoTransacao tipo, TransacaoEstoqueDTO dto) {
         TransacaoEstoque transacao = new TransacaoEstoque();
         transacao.setProduto(produto);
@@ -71,6 +70,7 @@ public class EstoqueService {
         TransacaoEstoque transacaoSalva = transacaoEstoqueRepository.save(transacao);
         return converterParaDTO(transacaoSalva);
     }
+
     private TransacaoEstoqueResponseDTO converterParaDTO(TransacaoEstoque transacao) {
         return new TransacaoEstoqueResponseDTO(
                 transacao.getId(),

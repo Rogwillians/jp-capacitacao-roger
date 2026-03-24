@@ -6,28 +6,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Table(name = "itens_carrinho")
-@EntityListeners(AuditingEntityListener.class)
+@Table(name = "itens_pedido")
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemCarrinho {
+public class ItemPedido {
 
     @Id
     @UuidGenerator
-    @Column(columnDefinition = "VARCHAR2(36)")
+    @Column(columnDefinition = "VARCHAR(36)")
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "carrinho_id", nullable = false)
-    private Carrinho carrinho;
+    @JoinColumn(name = "pedido_id", nullable = false)
+    private Pedido pedido;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "produto_id", nullable = false)

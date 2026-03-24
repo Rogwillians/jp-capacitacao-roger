@@ -154,7 +154,7 @@ public class ProdutoService {
 
 
     @Transactional
-    public Produto atualizarPreco(UUID id, BigDecimal precoNovo) {
+    public ProdutoResponseDTO atualizarPreco(UUID id, BigDecimal precoNovo) {
         final var produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado"));
         Produto produtoAtualizado;
@@ -176,7 +176,7 @@ public class ProdutoService {
         }
 
 
-        return produtoAtualizado;
+        return converterParaDTO(produtoAtualizado);
 
     }
 

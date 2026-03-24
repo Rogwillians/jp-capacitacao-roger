@@ -16,11 +16,11 @@ import java.util.UUID;
 
 @Table(name = "produtos")
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
 public class Produto {
 
     @Id
@@ -61,5 +61,7 @@ public class Produto {
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
 
+    @Column(name = "nota_media", precision = 3, scale = 2)
+    private BigDecimal notaMedia = BigDecimal.ZERO;
 
 }
