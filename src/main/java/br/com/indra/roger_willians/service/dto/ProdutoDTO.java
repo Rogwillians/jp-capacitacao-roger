@@ -16,7 +16,7 @@ public record ProdutoDTO(@NotBlank(message = "O nome do produto é obrigatório.
                          @NotBlank(message = "O SKU é obrigatório.")
                           String sku,
 
-                         @NotNull(message = "O preço de venda é obrigatório.")
+                         @NotBlank(message = "O preço de venda é obrigatório.")
                           @Positive(message = "O preço de venda deve ser maior que zero.")
                           BigDecimal preco,
 
@@ -25,7 +25,7 @@ public record ProdutoDTO(@NotBlank(message = "O nome do produto é obrigatório.
 
                          UUID categoriaId,
 
-                         @NotNull(message = "A quantidade inicial em estoque é obrigatória.")
+                         @NotBlank(message = "A quantidade inicial em estoque é obrigatória.")
                           @PositiveOrZero(message = "A quantidade em estoque não pode ser negativa.")
                           Integer quantidadeEstoque) {
 }

@@ -142,8 +142,8 @@ public class ProdutoController {
 
     @PatchMapping("/reativar/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void reativarProduto(@PathVariable UUID id) {
-        produtoService.reativarProduto(id);
+    public ProdutoResponseDTO reativarProduto(@PathVariable UUID id) {
+        return produtoService.reativarProduto(id);
     }
 
 

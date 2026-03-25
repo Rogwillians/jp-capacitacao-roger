@@ -1,11 +1,11 @@
 package br.com.indra.roger_willians.service.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
 import java.util.UUID;
 
-public record TransacaoEstoqueDTO(@NotNull(message = "A quantidade é obrigatória.")
+public record TransacaoEstoqueDTO(@NotBlank(message = "A quantidade é obrigatória.")
                                   @Positive(message = "A quantidade deve ser maior que zero.")
                                   Integer quantidade,
 
