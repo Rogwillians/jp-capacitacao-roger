@@ -1,5 +1,6 @@
 package br.com.indra.roger_willians.service;
 
+import br.com.indra.roger_willians.exception.RecursoNaoEncontradoException;
 import br.com.indra.roger_willians.model.Categoria;
 import br.com.indra.roger_willians.repository.CategoriaRepository;
 import br.com.indra.roger_willians.service.dto.CategoriaDTO;
@@ -38,19 +39,19 @@ public class CategoriaService {
 
     public CategoriaResponseDTO findById(UUID id) {
         Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada."));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria não encontrada."));
         return converterParaDTO(categoria);
     }
 
     public Categoria buscarEntidadePorId(UUID id) {
         return categoriaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada com o ID: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria não encontrada com o ID: " + id));
     }
 
     @Transactional
     public CategoriaResponseDTO atualizarCategoria(UUID id, CategoriaDTO dto) {
         Categoria categoriaExistente = categoriaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada com o ID: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria não encontrada com o ID: " + id));
 
         if (!categoriaExistente.getNome().equals(dto.nome()) && categoriaRepository.existsByNome(dto.nome())) {
             throw new IllegalArgumentException("Já existe uma categoria com o nome: " + dto.nome());
@@ -60,7 +61,7 @@ public class CategoriaService {
 
         if (dto.categoriaPaiId() != null) {
             Categoria pai = categoriaRepository.findById(dto.categoriaPaiId())
-                    .orElseThrow(() -> new IllegalArgumentException("Categoria Pai não encontrada."));
+                    .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria Pai não encontrada."));
             categoriaExistente.setCategoriaPai(pai);
         } else {
             categoriaExistente.setCategoriaPai(null);
@@ -72,7 +73,7 @@ public class CategoriaService {
     @Transactional
     public void deletarCategoria(UUID id) {
         Categoria categoriaExistente = categoriaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada com o ID: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria não encontrada com o ID: " + id));
 
         categoriaRepository.delete(categoriaExistente);
     }
@@ -84,7 +85,7 @@ public class CategoriaService {
 
         if (dto.categoriaPaiId() != null) {
             Categoria pai = categoriaRepository.findById(dto.categoriaPaiId())
-                    .orElseThrow(() -> new IllegalArgumentException("Categoria Pai não encontrada."));
+                    .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria Pai não encontrada."));
             categoria.setCategoriaPai(pai);
         }
 

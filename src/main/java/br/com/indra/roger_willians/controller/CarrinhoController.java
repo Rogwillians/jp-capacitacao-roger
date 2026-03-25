@@ -18,7 +18,6 @@ public class CarrinhoController {
 
     private final CarrinhoService carrinhoService;
 
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public CarrinhoResponseDTO visualizarCarrinho(
@@ -27,7 +26,6 @@ public class CarrinhoController {
         return carrinhoService.converterParaDTO(
                 carrinhoService.obterOuCriarCarrinhoAtivo(usuarioId));
     }
-
 
     @PostMapping("/itens")
     @ResponseStatus(HttpStatus.OK)

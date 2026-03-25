@@ -5,7 +5,7 @@ import br.com.indra.roger_willians.service.dto.TransacaoEstoqueResponseDTO;
 import br.com.indra.roger_willians.service.EstoqueService;
 import br.com.indra.roger_willians.service.dto.TransacaoEstoqueDTO;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,23 +22,26 @@ public class EstoqueController {
     }
 
     @PostMapping("/adicionar/{produtoId}")
-    public ResponseEntity<TransacaoEstoqueResponseDTO> adicionarEstoque(
+    @ResponseStatus(HttpStatus.OK)
+    public TransacaoEstoqueResponseDTO adicionarEstoque(
             @PathVariable UUID produtoId,
             @Valid @RequestBody TransacaoEstoqueDTO dto) {
 
-        return ResponseEntity.ok(estoqueService.adicionarEstoque(produtoId, dto));
+        return estoqueService.adicionarEstoque(produtoId, dto);
     }
 
     @PostMapping("/remover/{produtoId}")
-    public ResponseEntity<TransacaoEstoqueResponseDTO> removerEstoque(
+    @ResponseStatus(HttpStatus.OK)
+    public TransacaoEstoqueResponseDTO removerEstoque(
             @PathVariable UUID produtoId,
             @Valid @RequestBody TransacaoEstoqueDTO dto) {
 
-        return ResponseEntity.ok(estoqueService.removerEstoque(produtoId, dto));
+        return estoqueService.removerEstoque(produtoId, dto);
     }
 
     @GetMapping("/{produtoId}")
-    public ResponseEntity<List<TransacaoEstoqueResponseDTO>> buscarHistoricoEstoque(@PathVariable UUID produtoId) {
-        return ResponseEntity.ok(estoqueService.buscarHistorico(produtoId));
+    @ResponseStatus(HttpStatus.OK)
+    public List<TransacaoEstoqueResponseDTO> buscarHistoricoEstoque(@PathVariable UUID produtoId) {
+        return estoqueService.buscarHistorico(produtoId);
     }
 }

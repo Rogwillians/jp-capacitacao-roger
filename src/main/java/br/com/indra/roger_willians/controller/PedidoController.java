@@ -6,7 +6,6 @@ import br.com.indra.roger_willians.service.PedidoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -19,26 +18,29 @@ public class PedidoController {
     private final PedidoService pedidoService;
 
     @PostMapping("/criar")
-    public ResponseEntity<PedidoResponseDTO> criarPedido(
+    @ResponseStatus(HttpStatus.CREATED)
+    public PedidoResponseDTO criarPedido(
             @RequestHeader("X-Usuario-Id") UUID usuarioId,
             @Valid @RequestBody PedidoDTO dto) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(pedidoService.criarPedido(usuarioId, dto));
+        return pedidoService.criarPedido(usuarioId, dto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PedidoResponseDTO> buscarPedido(
+    @ResponseStatus(HttpStatus.OK)
+    public PedidoResponseDTO buscarPedido(
             @RequestHeader("X-Usuario-Id") UUID usuarioId,
             @PathVariable UUID id) {
 
-        return ResponseEntity.ok(pedidoService.buscarPorId(id, usuarioId));
+        return pedidoService.buscarPorId(id, usuarioId);
     }
 
     @PostMapping("/{id}/cancel")
-    public ResponseEntity<PedidoResponseDTO> cancelarPedido(
+    @ResponseStatus(HttpStatus.OK)
+    public PedidoResponseDTO cancelarPedido(
             @RequestHeader("X-Usuario-Id") UUID usuarioId,
             @PathVariable UUID id) {
 
-        return ResponseEntity.ok(pedidoService.cancelarPedido(id, usuarioId));
+        return pedidoService.cancelarPedido(id, usuarioId);
     }
 }
