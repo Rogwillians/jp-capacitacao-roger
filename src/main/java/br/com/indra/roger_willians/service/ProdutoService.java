@@ -24,9 +24,7 @@ public class ProdutoService {
 
     public List<ProdutoResponseDTO> findAll(){
 
-        List<Produto> produtos = produtoRepository.findAll();
-
-        return produtos.stream()
+        return produtoRepository.findAll().stream()
                 .map(this::converterParaDTO
                 )
                 .toList();
@@ -109,10 +107,7 @@ public class ProdutoService {
             throw new IllegalArgumentException("O preço mínimo não pode ser maior que o preço máximo.");
         }
 
-        List<Produto> produtos = produtoRepository.findByPrecoBetween(precoMin, precoMax);
-
-
-        return produtos.stream()
+        return produtoRepository.findByPrecoBetween(precoMin, precoMax).stream()
                 .map(this::converterParaDTO)
                 .toList();
     }
@@ -181,7 +176,7 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void reativarProduto(UUID id) {
+    public ProdutoResponseDTO reativarProduto(UUID id) {
 
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Produto não encontrado"));
@@ -192,7 +187,7 @@ public class ProdutoService {
 
         produto.setAtivo(true);
 
-        produtoRepository.save(produto);
+        return converterParaDTO(produtoRepository.save(produto));
     }
 
 
@@ -231,7 +226,8 @@ public class ProdutoService {
                 produto.getDescricao(),
                 produto.getSku(),
                 produto.getPreco(),
-                produto.getQuantidadeEstoque()
+                produto.getQuantidadeEstoque(),
+                produto.getNotaMedia()
         );
     }
 

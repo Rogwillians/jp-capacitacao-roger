@@ -12,6 +12,7 @@ public record ProdutoResponseDTO(
         String descricao,
         String sku,
         BigDecimal preco,
-        Integer quantidadeEstoque
+        Integer quantidadeEstoque,
+        BigDecimal notaMedia
 
 ) {}

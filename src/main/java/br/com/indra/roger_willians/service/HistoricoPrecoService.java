@@ -29,16 +29,12 @@ public class HistoricoPrecoService {
         );
 
 
-        HistoricoPreco historico = converterParaEntidade(dto, produto);
-
-        historicoPrecoRepository.save(historico);
+        historicoPrecoRepository.save(converterParaEntidade(dto, produto));
     }
 
     public List<HistoricoPrecoResponseDTO> buscarHistoricoPorProduto(UUID produtoId) {
 
-        List<HistoricoPreco> historicos = historicoPrecoRepository.findByProdutoIdOrderByDataAlteracaoDesc(produtoId);
-
-        return historicos.stream()
+        return historicoPrecoRepository.findByProdutoIdOrderByDataAlteracaoDesc(produtoId).stream()
                 .map(this::converterParaDTO)
                 .toList();
     }
