@@ -13,6 +13,5 @@ public record ProdutoResponseDTO(
         String sku,
         BigDecimal preco,
         Integer quantidadeEstoque,
-        BigDecimal notaMedia
-
-) {}
+        BigDecimal notaMedia,
+        UUID vendedorId) {}

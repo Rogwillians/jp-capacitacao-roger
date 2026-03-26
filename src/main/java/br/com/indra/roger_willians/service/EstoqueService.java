@@ -1,5 +1,6 @@
 package br.com.indra.roger_willians.service;
 
+import br.com.indra.roger_willians.exception.RecursoNaoEncontradoException;
 import br.com.indra.roger_willians.model.Produto;
 import br.com.indra.roger_willians.model.TransacaoEstoque;
 import br.com.indra.roger_willians.model.enums.TipoTransacao;
@@ -24,6 +25,9 @@ public class EstoqueService {
 
         List<TransacaoEstoque> transacao = transacaoEstoqueRepository.findByProdutoIdOrderByDataCriacaoDesc(produtoId);
 
+        if(transacao.isEmpty()){
+            throw new RecursoNaoEncontradoException("Não foram encontradas transações para o produto");
+        }
 
         return transacao.stream()
                 .map(this::converterParaDTO)
@@ -47,11 +51,9 @@ public class EstoqueService {
     public TransacaoEstoqueResponseDTO removerEstoque(UUID produtoId, TransacaoEstoqueDTO dto) {
         Produto produto = produtoService.buscarEntidadePorId(produtoId);
 
-
         if (produto.getQuantidadeEstoque() < dto.quantidade()) {
             throw new IllegalArgumentException("Estoque insuficiente. Quantidade atual: " + produto.getQuantidadeEstoque());
         }
-
 
         produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() - dto.quantidade());
 

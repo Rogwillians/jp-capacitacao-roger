@@ -4,6 +4,7 @@ import br.com.indra.roger_willians.model.enums.TipoAplicacaoCupom;
 import br.com.indra.roger_willians.model.enums.TipoDesconto;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
@@ -17,7 +18,7 @@ public record PromocaoDTO(
         @NotBlank(message = "O tipo de desconto é obrigatório.")
         TipoDesconto tipo,
 
-        @NotBlank(message = "O valor do desconto é obrigatório.")
+        @NotNull(message = "O valor do desconto é obrigatório.")
         @Positive(message = "O valor deve ser maior que zero.")
         BigDecimal valor,
 

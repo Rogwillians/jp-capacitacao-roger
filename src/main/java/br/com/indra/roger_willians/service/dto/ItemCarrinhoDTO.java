@@ -1,6 +1,7 @@
 package br.com.indra.roger_willians.service.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ public record ItemCarrinhoDTO(
         @NotBlank(message = "O ID do produto é obrigatório.")
         UUID produtoId,
 
-        @NotBlank(message = "A quantidade é obrigatória.")
+        @NotNull(message = "A quantidade é obrigatória.")
         @Positive(message = "A quantidade deve ser maior que zero.")
         Integer quantidade
 ) {}

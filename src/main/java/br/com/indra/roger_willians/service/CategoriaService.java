@@ -27,8 +27,8 @@ public class CategoriaService {
         }
 
         Categoria categoria = converterParaEntidade(dto);
-        Categoria categoriaSalva = categoriaRepository.save(categoria);
-        return converterParaDTO(categoriaSalva);
+
+        return converterParaDTO(categoriaRepository.save(categoria));
     }
 
     public List<CategoriaResponseDTO> findAll() {
@@ -77,7 +77,6 @@ public class CategoriaService {
 
         categoriaRepository.delete(categoriaExistente);
     }
-
 
     private Categoria converterParaEntidade(CategoriaDTO dto) {
         Categoria categoria = new Categoria();
