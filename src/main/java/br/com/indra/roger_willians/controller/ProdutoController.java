@@ -21,14 +21,12 @@ public class ProdutoController {
 
     private final ProdutoService produtoService;
 
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ProdutoResponseDTO> getAll(){
 
         return produtoService.findAll();
     }
-
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -104,47 +102,52 @@ public class ProdutoController {
 
     @PostMapping("/cadastrar")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProdutoResponseDTO cadastrarProduto(@Valid @RequestBody ProdutoDTO dto){
+    public ProdutoResponseDTO cadastrarProduto(@Valid @RequestBody ProdutoDTO dto,
+                                               @RequestParam UUID usuarioId){
 
-        return produtoService.cadastrarProduto(dto);
+        return produtoService.cadastrarProduto(dto, usuarioId);
     }
 
     @PutMapping("/atualizar/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ProdutoResponseDTO atualizarProduto(
             @PathVariable UUID id,
+            @RequestParam UUID usuarioId,
             @Valid @RequestBody ProdutoDTO dto) {
 
-        return produtoService.atualizarProduto(id, dto);
+        return produtoService.atualizarProduto(id, usuarioId, dto);
     }
 
     @PatchMapping("/atualiza-preco/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ProdutoResponseDTO atualizarPreco(
             @PathVariable UUID id,
+            @RequestParam UUID usuarioId,
             @Valid @RequestBody AtualizarPrecoDTO dto) {
 
-        return produtoService.atualizarPreco(id, dto.preco());
+        return produtoService.atualizarPreco(id, usuarioId, dto.preco());
     }
 
     @DeleteMapping("/deletar/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletarProduto(@PathVariable UUID id) {
+    public void deletarProduto(@PathVariable UUID id,
+                                @RequestParam UUID usuarioId) {
 
-        produtoService.deletarProduto(id);
+        produtoService.deletarProduto(id, usuarioId);
     }
 
     @DeleteMapping("/inativar/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void inativarProduto(@PathVariable UUID id) {
-        produtoService.inativarProduto(id);
+    public void inativarProduto(@PathVariable UUID id,
+                                @RequestParam UUID usuarioId) {
+        produtoService.inativarProduto(id, usuarioId);
     }
 
     @PatchMapping("/reativar/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ProdutoResponseDTO reativarProduto(@PathVariable UUID id) {
-        return produtoService.reativarProduto(id);
+    public ProdutoResponseDTO reativarProduto(@PathVariable UUID id,
+                                              @RequestParam UUID usuarioId) {
+        return produtoService.reativarProduto(id, usuarioId);
     }
-
 
 }

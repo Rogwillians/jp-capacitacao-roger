@@ -2,9 +2,12 @@ package br.com.indra.roger_willians.service;
 
 import br.com.indra.roger_willians.exception.RecursoNaoEncontradoException;
 import br.com.indra.roger_willians.model.Categoria;
+import br.com.indra.roger_willians.model.enums.AcaoAuditoria;
+import br.com.indra.roger_willians.model.enums.TipoEntidade;
 import br.com.indra.roger_willians.repository.CategoriaRepository;
 import br.com.indra.roger_willians.service.dto.CategoriaDTO;
 import br.com.indra.roger_willians.service.dto.CategoriaResponseDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,23 +15,30 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
-
-    public CategoriaService(CategoriaRepository categoriaRepository) {
-        this.categoriaRepository = categoriaRepository;
-    }
+    private final AuditLogService auditLogService;
 
     @Transactional
-    public CategoriaResponseDTO cadastrarCategoria(CategoriaDTO dto) {
+    public CategoriaResponseDTO cadastrarCategoria(CategoriaDTO dto, UUID usuarioId) {
         if (categoriaRepository.existsByNome(dto.nome())) {
             throw new IllegalArgumentException("Já existe uma categoria com o nome: " + dto.nome());
         }
 
-        Categoria categoria = converterParaEntidade(dto);
+        Categoria categoria = categoriaRepository.save(converterParaEntidade(dto));
+        CategoriaResponseDTO categoriaCriada = converterParaDTO(categoria);
 
-        return converterParaDTO(categoriaRepository.save(categoria));
+        auditLogService.registrarLog(
+                TipoEntidade.CATEGORIA,
+                categoria.getId(),
+                AcaoAuditoria.CRIACAO,
+                null,
+                categoriaCriada,
+                usuarioId
+        );
+        return converterParaDTO(categoria);
     }
 
     public List<CategoriaResponseDTO> findAll() {
@@ -49,9 +59,11 @@ public class CategoriaService {
     }
 
     @Transactional
-    public CategoriaResponseDTO atualizarCategoria(UUID id, CategoriaDTO dto) {
+    public CategoriaResponseDTO atualizarCategoria(UUID id,UUID usuarioId, CategoriaDTO dto) {
         Categoria categoriaExistente = categoriaRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria não encontrada com o ID: " + id));
+
+        CategoriaResponseDTO categoriaAntiga = converterParaDTO(categoriaExistente);
 
         if (!categoriaExistente.getNome().equals(dto.nome()) && categoriaRepository.existsByNome(dto.nome())) {
             throw new IllegalArgumentException("Já existe uma categoria com o nome: " + dto.nome());
@@ -67,15 +79,33 @@ public class CategoriaService {
             categoriaExistente.setCategoriaPai(null);
         }
 
+        auditLogService.registrarLog(
+                TipoEntidade.CATEGORIA,
+                categoriaExistente.getId(),
+                AcaoAuditoria.ATUALIZACAO,
+                categoriaAntiga,
+                categoriaExistente,
+                usuarioId
+        );
+
         return converterParaDTO(categoriaExistente);
     }
 
     @Transactional
-    public void deletarCategoria(UUID id) {
+    public void deletarCategoria(UUID id, UUID usuarioId) {
         Categoria categoriaExistente = categoriaRepository.findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Categoria não encontrada com o ID: " + id));
-
+        CategoriaResponseDTO categoriaDeletada = converterParaDTO(categoriaExistente);
         categoriaRepository.delete(categoriaExistente);
+
+        auditLogService.registrarLog(
+                TipoEntidade.CATEGORIA,
+                categoriaExistente.getId(),
+                AcaoAuditoria.ATUALIZACAO,
+                null,
+                categoriaDeletada,
+                usuarioId
+        );
     }
 
     private Categoria converterParaEntidade(CategoriaDTO dto) {

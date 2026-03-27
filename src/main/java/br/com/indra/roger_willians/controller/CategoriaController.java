@@ -22,9 +22,10 @@ public class CategoriaController {
 
     @PostMapping("/cadastrar")
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoriaResponseDTO cadastrarCategoria(@Valid @RequestBody CategoriaDTO dto) {
+    public CategoriaResponseDTO cadastrarCategoria(@Valid @RequestBody CategoriaDTO dto,
+                                                   @RequestParam UUID usuarioId ) {
 
-        return categoriaService.cadastrarCategoria(dto);
+        return categoriaService.cadastrarCategoria(dto, usuarioId);
     }
 
     @GetMapping("/listar")
@@ -42,14 +43,16 @@ public class CategoriaController {
     @PutMapping("atualizar/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CategoriaResponseDTO atualizarCategoria(@PathVariable UUID id,
-                                                                   @Valid @RequestBody CategoriaDTO dto) {
+                                                   @RequestParam UUID usuarioId,
+                                                   @Valid @RequestBody CategoriaDTO dto) {
 
-        return categoriaService.atualizarCategoria(id, dto);
+        return categoriaService.atualizarCategoria(id, usuarioId,dto);
     }
 
     @DeleteMapping("/deletar/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletarCategoria(@PathVariable UUID id) {
-        categoriaService.deletarCategoria(id);
+    public void deletarCategoria(@PathVariable UUID id,
+                                 @RequestParam UUID usuarioId) {
+        categoriaService.deletarCategoria(id, usuarioId);
     }
 }

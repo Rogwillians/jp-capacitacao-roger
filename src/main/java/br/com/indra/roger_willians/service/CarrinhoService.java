@@ -42,7 +42,6 @@ public class CarrinhoService {
         Carrinho carrinho = obterOuCriarCarrinhoAtivo(usuarioId);
         Produto produto = produtoService.buscarEntidadePorId(dto.produtoId());
 
-
         Optional<ItemCarrinho> itemExistente = carrinho.getItens().stream()
                 .filter(item -> item.getProduto().getId().equals(produto.getId()))
                 .findFirst();
@@ -57,8 +56,7 @@ public class CarrinhoService {
             carrinho.getItens().add(novoItem);
         }
 
-        Carrinho carrinhoSalvo = carrinhoRepository.save(carrinho);
-        return converterParaDTO(carrinhoSalvo);
+        return converterParaDTO(carrinhoRepository.save(carrinho));
     }
 
     @Transactional
@@ -72,8 +70,7 @@ public class CarrinhoService {
 
         item.setQuantidade(novaQuantidade);
 
-        Carrinho carrinhoSalvo = carrinhoRepository.save(carrinho);
-        return converterParaDTO(carrinhoSalvo);
+        return converterParaDTO(carrinhoRepository.save(carrinho));
     }
 
     @Transactional
@@ -86,8 +83,7 @@ public class CarrinhoService {
             throw new RecursoNaoEncontradoException("Item não encontrado neste carrinho.");
         }
 
-        Carrinho carrinhoSalvo = carrinhoRepository.save(carrinho);
-        return converterParaDTO(carrinhoSalvo);
+        return converterParaDTO(carrinhoRepository.save(carrinho));
     }
 
 

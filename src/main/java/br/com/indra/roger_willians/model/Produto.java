@@ -64,4 +64,7 @@ public class Produto {
     @Column(name = "nota_media", precision = 3, scale = 2)
     private BigDecimal notaMedia = BigDecimal.ZERO;
 
+    @Column(name = "vendedor_id", nullable = false, columnDefinition = "VARCHAR2(36)")
+    private UUID vendedorId;
+
 }
