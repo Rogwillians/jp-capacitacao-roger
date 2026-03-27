@@ -2,7 +2,7 @@ package br.com.indra.roger_willians.controller;
 
 import br.com.indra.roger_willians.model.enums.TipoEntidade;
 import br.com.indra.roger_willians.service.AuditLogService;
-import br.com.indra.roger_willians.service.dto.AuditLogResponseDTO;
+import br.com.indra.roger_willians.dto.AuditLogResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

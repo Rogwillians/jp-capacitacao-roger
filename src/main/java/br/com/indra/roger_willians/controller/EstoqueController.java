@@ -1,9 +1,9 @@
 package br.com.indra.roger_willians.controller;
 
 
-import br.com.indra.roger_willians.service.dto.TransacaoEstoqueResponseDTO;
+import br.com.indra.roger_willians.dto.TransacaoEstoqueResponseDTO;
 import br.com.indra.roger_willians.service.EstoqueService;
-import br.com.indra.roger_willians.service.dto.TransacaoEstoqueDTO;
+import br.com.indra.roger_willians.dto.TransacaoEstoqueDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

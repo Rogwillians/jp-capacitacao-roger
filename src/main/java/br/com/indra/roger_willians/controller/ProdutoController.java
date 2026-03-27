@@ -1,9 +1,9 @@
 package br.com.indra.roger_willians.controller;
 
 import br.com.indra.roger_willians.service.ProdutoService;
-import br.com.indra.roger_willians.service.dto.AtualizarPrecoDTO;
-import br.com.indra.roger_willians.service.dto.ProdutoDTO;
-import br.com.indra.roger_willians.service.dto.ProdutoResponseDTO;
+import br.com.indra.roger_willians.dto.AtualizarPrecoDTO;
+import br.com.indra.roger_willians.dto.ProdutoDTO;
+import br.com.indra.roger_willians.dto.ProdutoResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

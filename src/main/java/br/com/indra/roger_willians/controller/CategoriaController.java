@@ -1,7 +1,7 @@
 package br.com.indra.roger_willians.controller;
 
-import br.com.indra.roger_willians.service.dto.CategoriaDTO;
-import br.com.indra.roger_willians.service.dto.CategoriaResponseDTO;
+import br.com.indra.roger_willians.dto.CategoriaDTO;
+import br.com.indra.roger_willians.dto.CategoriaResponseDTO;
 import br.com.indra.roger_willians.service.CategoriaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

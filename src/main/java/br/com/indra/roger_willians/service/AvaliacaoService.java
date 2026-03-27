@@ -1,7 +1,7 @@
 package br.com.indra.roger_willians.service;
 
-import br.com.indra.roger_willians.service.dto.AvaliacaoDTO;
-import br.com.indra.roger_willians.service.dto.AvaliacaoResponseDTO;
+import br.com.indra.roger_willians.dto.AvaliacaoDTO;
+import br.com.indra.roger_willians.dto.AvaliacaoResponseDTO;
 import br.com.indra.roger_willians.model.Avaliacao;
 import br.com.indra.roger_willians.model.Produto;
 import br.com.indra.roger_willians.repository.AvaliacaoRepository;

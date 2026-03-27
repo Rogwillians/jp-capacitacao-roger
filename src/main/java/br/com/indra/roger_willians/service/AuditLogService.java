@@ -5,7 +5,7 @@ import br.com.indra.roger_willians.model.AuditLog;
 import br.com.indra.roger_willians.model.enums.AcaoAuditoria;
 import br.com.indra.roger_willians.model.enums.TipoEntidade;
 import br.com.indra.roger_willians.repository.AuditLogRepository;
-import br.com.indra.roger_willians.service.dto.AuditLogResponseDTO;
+import br.com.indra.roger_willians.dto.AuditLogResponseDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

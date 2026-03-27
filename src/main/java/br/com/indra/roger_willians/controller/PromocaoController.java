@@ -1,6 +1,6 @@
 package br.com.indra.roger_willians.controller;
 
-import br.com.indra.roger_willians.service.dto.PromocaoDTO;
+import br.com.indra.roger_willians.dto.PromocaoDTO;
 import br.com.indra.roger_willians.model.Promocao;
 import br.com.indra.roger_willians.service.PromocaoService;
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package br.com.indra.roger_willians.service.dto;
+package br.com.indra.roger_willians.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -8,7 +8,7 @@ import br.com.indra.roger_willians.model.enums.TipoAplicacaoCupom;
 import br.com.indra.roger_willians.model.enums.TipoDesconto;
 import br.com.indra.roger_willians.repository.PromocaoRepository;
 import br.com.indra.roger_willians.repository.UsoPromocaoRepository;
-import br.com.indra.roger_willians.service.dto.PromocaoDTO;
+import br.com.indra.roger_willians.dto.PromocaoDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

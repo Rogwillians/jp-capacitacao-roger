@@ -1,9 +1,9 @@
-package br.com.indra.roger_willians.service.dto;
+package br.com.indra.roger_willians.dto;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record ItemCarrinhoResponseDTO(
+public record ItemPedidoResponseDTO(
         UUID id,
         UUID produtoId,
         String nomeProduto,

@@ -1,9 +1,9 @@
 package br.com.indra.roger_willians.controller;
 
 import br.com.indra.roger_willians.service.CarrinhoService;
-import br.com.indra.roger_willians.service.dto.AtualizarQuantidadeDTO;
-import br.com.indra.roger_willians.service.dto.CarrinhoResponseDTO;
-import br.com.indra.roger_willians.service.dto.ItemCarrinhoDTO;
+import br.com.indra.roger_willians.dto.AtualizarQuantidadeDTO;
+import br.com.indra.roger_willians.dto.CarrinhoResponseDTO;
+import br.com.indra.roger_willians.dto.ItemCarrinhoDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

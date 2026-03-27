@@ -3,8 +3,8 @@ package br.com.indra.roger_willians.service;
 import br.com.indra.roger_willians.model.HistoricoPreco;
 import br.com.indra.roger_willians.model.Produto;
 import br.com.indra.roger_willians.repository.HistoricoPrecoRepository;
-import br.com.indra.roger_willians.service.dto.HistoricoPrecoDTO;
-import br.com.indra.roger_willians.service.dto.HistoricoPrecoResponseDTO;
+import br.com.indra.roger_willians.dto.HistoricoPrecoDTO;
+import br.com.indra.roger_willians.dto.HistoricoPrecoResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package br.com.indra.roger_willians.controller;
 
-import br.com.indra.roger_willians.service.dto.AvaliacaoDTO;
-import br.com.indra.roger_willians.service.dto.AvaliacaoResponseDTO;
+import br.com.indra.roger_willians.dto.AvaliacaoDTO;
+import br.com.indra.roger_willians.dto.AvaliacaoResponseDTO;
 import br.com.indra.roger_willians.service.AvaliacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
