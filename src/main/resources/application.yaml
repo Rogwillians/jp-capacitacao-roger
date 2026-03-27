@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: jp-capacitacao
+
+  datasource:
+    url: ${URL_DB:jdbc:oracle:thin:@localhost:1521:xe}
+    username: ${USERNAME_DB:sys}
+    password: ${PASSWORD_DB:admin}
+    driver-class-name: oracle.jdbc.OracleDriver
+
+  jpa:
+    database-platform: org.hibernate.dialect.OracleDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        type:
+          preferred_uuid_jdbc_type: VARCHAR
