@@ -2,16 +2,15 @@ package br.com.indra.roger_willians.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
 public record AvaliacaoDTO(
-        @NotBlank(message = "O ID do produto é obrigatório.")
+        @NotNull(message = "O ID do produto é obrigatório.")
         UUID produtoId,
 
-        @NotBlank(message = "O ID do pedido é obrigatório.")
+        @NotNull(message = "O ID do pedido é obrigatório.")
         UUID pedidoId,
 
         @NotNull(message = "A nota é obrigatória.")

@@ -69,8 +69,7 @@ public class EstoqueService {
         transacao.setReferenciaId(dto.referenciaId());
         transacao.setCriadoPor(dto.criadoPor());
 
-        TransacaoEstoque transacaoSalva = transacaoEstoqueRepository.save(transacao);
-        return converterParaDTO(transacaoSalva);
+        return converterParaDTO(transacaoEstoqueRepository.save(transacao));
     }
 
     private TransacaoEstoqueResponseDTO converterParaDTO(TransacaoEstoque transacao) {

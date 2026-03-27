@@ -64,7 +64,7 @@ public class CarrinhoService {
         Carrinho carrinho = obterOuCriarCarrinhoAtivo(usuarioId);
 
         ItemCarrinho item = carrinho.getItens().stream()
-                .filter(i -> i.getId().equals(itemId))
+                .filter(i -> i.getProduto().getId().equals(itemId))
                 .findFirst()
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Item não encontrado neste carrinho."));
 
@@ -77,7 +77,7 @@ public class CarrinhoService {
     public CarrinhoResponseDTO removerItem(UUID usuarioId, UUID itemId) {
         Carrinho carrinho = obterOuCriarCarrinhoAtivo(usuarioId);
 
-        boolean removido = carrinho.getItens().removeIf(item -> item.getId().equals(itemId));
+        boolean removido = carrinho.getItens().removeIf(item -> item.getProduto().getId().equals(itemId));
 
         if (!removido) {
             throw new RecursoNaoEncontradoException("Item não encontrado neste carrinho.");
@@ -115,14 +115,13 @@ public class CarrinhoService {
         );
     }
 
-    private ItemCarrinho converterParaEntidade(ItemCarrinhoDTO dto, Carrinho carrinho, Produto produto) {
+    public ItemCarrinho converterParaEntidade(ItemCarrinhoDTO dto, Carrinho carrinho, Produto produto) {
 
         ItemCarrinho item = new ItemCarrinho();
 
         item.setCarrinho(carrinho);
         item.setProduto(produto);
         item.setQuantidade(dto.quantidade());
-
 
         item.setPrecoSnapshot(produto.getPreco());
 

@@ -98,9 +98,9 @@ public class ProdutoService {
         if (quantidadeMinima == null) {
             throw new IllegalArgumentException("O parâmetro 'quantidade' é obrigatório.");
         }
-        List<Produto> produto = produtoRepository.findByQuantidadeEstoqueLessThanEqual(quantidadeMinima);
 
-        return produto.stream()
+        return produtoRepository.findByQuantidadeEstoqueLessThanEqual(quantidadeMinima)
+                .stream()
                 .map(this::converterParaDTO)
                 .toList();
     }
@@ -111,7 +111,8 @@ public class ProdutoService {
             throw new IllegalArgumentException("O preço mínimo não pode ser maior que o preço máximo.");
         }
 
-        return produtoRepository.findByPrecoBetween(precoMin, precoMax).stream()
+        return produtoRepository.findByPrecoBetween(precoMin, precoMax)
+                .stream()
                 .map(this::converterParaDTO)
                 .toList();
     }

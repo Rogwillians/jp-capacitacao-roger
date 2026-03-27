@@ -15,25 +15,25 @@ public record PromocaoDTO(
         @NotBlank(message = "O código do cupom é obrigatório.")
         String codigo,
 
-        @NotBlank(message = "O tipo de desconto é obrigatório.")
+        @NotNull(message = "O tipo de desconto é obrigatório.")
         TipoDesconto tipo,
 
         @NotNull(message = "O valor do desconto é obrigatório.")
         @Positive(message = "O valor deve ser maior que zero.")
         BigDecimal valor,
 
-        @NotBlank(message = "A data de início é obrigatória.")
+        @NotNull(message = "A data de início é obrigatória.")
         LocalDateTime dataInicio,
 
-        @NotBlank(message = "A data de fim é obrigatória.")
+        @NotNull(message = "A data de fim é obrigatória.")
         @Future(message = "A data de fim deve ser no futuro.")
         LocalDateTime dataFim,
 
-        @NotBlank(message = "O limite de uso é obrigatório.")
+        @NotNull(message = "O limite de uso é obrigatório.")
         @Positive(message = "O limite de uso deve ser maior que zero.")
         Integer limiteUso,
 
-        @NotBlank(message = "O tipo de aplicação é obrigatório.")
+        @NotNull(message = "O tipo de aplicação é obrigatório.")
         TipoAplicacaoCupom tipoAplicacao,
 
         UUID produtoAplicavelId,

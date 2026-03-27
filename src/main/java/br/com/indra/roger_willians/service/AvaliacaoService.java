@@ -38,11 +38,9 @@ public class AvaliacaoService {
             throw new IllegalArgumentException("Você já avaliou este produto.");
         }
 
-        Avaliacao avaliacao =  avaliacaoRepository.save(converterParaEntidade(usuarioId, dto));
-
         atualizarMediaProduto(dto.produtoId());
 
-        return converterParaDTO(avaliacao);
+        return converterParaDTO(avaliacaoRepository.save(converterParaEntidade(usuarioId, dto)));
     }
 
     public List<AvaliacaoResponseDTO> listarPorProduto(UUID produtoId) {
