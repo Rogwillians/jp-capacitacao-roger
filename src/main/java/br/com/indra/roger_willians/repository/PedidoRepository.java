@@ -9,6 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, UUID> {
-
     Optional<Pedido> findByIdAndUsuarioId(UUID id, UUID usuarioId);
 }
